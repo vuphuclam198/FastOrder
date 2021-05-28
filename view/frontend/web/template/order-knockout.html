@@ -1,0 +1,31 @@
+<div class="component-wrapper">
+    <input type="text" id="search-example" data-bind="value: search, valueUpdate: 'afterkeydown',  event: {keyup: getProduct}" style="width: 300px;">
+</div>
+
+
+<div class="content" style="margin-top: 50px;">
+    <table style="border: 1px solid red;">
+        <thead class="thead_data">
+            <tr>
+                <th>SKU</th>
+                <th>PRODUCT</th>
+                <th>QTY</th>
+                <th>SUBTOTAL</th>
+            </tr>
+        </thead>
+
+        <td></td>
+        <tbody style="border: 1px solid red;">
+            <tr class="tbody_data">
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    require(['jquery', "jquery/ui" ], function($){
+        $(document).ready(function() {
+            console.log("hjh");
+        })
+    });
+</script>
