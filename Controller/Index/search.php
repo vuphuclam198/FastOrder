@@ -47,9 +47,10 @@ class Search extends \Magento\Framework\App\Action\Action
     public function getProducts($data) {
         $product= $this->collectionFactory->create();
         $product
+        ->addAttributeToFilter('name',['like' => '%'.$data.'%'])
         ->addAttributeToSelect('*')
-        ->addMediaGalleryData()
-        ->addAttributeToFilter('name',['like' => '%'.$data.'%']);
+        ->setPageSize(3)
+        ->setCurPage(1);
         // var_dump($product);
         foreach ($product as $value) {
             $value['src'] = $this->imageHelper
@@ -58,6 +59,5 @@ class Search extends \Magento\Framework\App\Action\Action
         }
 
         return array_values($product->toArray());
-        // return $product->getData();
     }
 }

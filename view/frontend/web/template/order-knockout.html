@@ -1,10 +1,26 @@
 <div class="component-wrapper">
-    <input type="text" id="search-example" data-bind="value: search, valueUpdate: 'afterkeydown',  event: {keyup: getProduct}" style="width: 300px;">
+    <input type="text" id="search-example" data-bind="value: search, valueUpdate: 'afterkeydown',  event: {keyup: getProduct}" style="width: 300px; border-radius: 30px;" placeholder="search">
 </div>
 
+<div class="select-product">
+    <ul data-bind="foreach: resultSearch" style="padding-left: 0; width: 300px;">
+        <li class="product-item-fast" style="display: block; clear: both; position: relative;border-bottom: 1px solid #ddd;">
+            <img src="" data-bind="attr: {src: src}" alt="" class="img" style="width:100px; height: 100px;position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
 
-<div class="content" style="margin-top: 50px;">
-    <table style="border: 1px solid red;">
+            <div class="product-content" style="padding: 50px 20px 50px 110px;">
+                <p class="product-name" data-bind="text: name"></p>
+                <p>SKU#: </p>
+                <p class="product-sku" data-bind="text: sku"></p>
+                <p class="price" data-bind="text: price"></p>
+            </div>
+
+            <input type="checkbox" data-bind="checked: $parent.productChecked, event:{change: $parent.changeChecked}" style="position: absolute; top: 25%; right: 0;" />
+        </li>
+    </ul>
+</div>
+
+<div class="content-products" style="margin-top: 50px;">
+    <table class="table-products">
         <thead class="thead_data">
             <tr>
                 <th>SKU</th>
@@ -14,18 +30,39 @@
             </tr>
         </thead>
 
-        <td></td>
-        <tbody style="border: 1px solid red;">
+        <!-- <h1 data-bind="text: getTitle"></h1> -->
+
+        <tbody data-bind="foreach: productList">
             <tr class="tbody_data">
-                <td></td>
+                <td data-bind="text: sku"></td>
+                <td >
+                    <div class="item" style="position: relative;">
+                        <img src="" data-bind="attr: {src: src}" alt="" style="width:100px; height: 100px;position: absolute; left: 0; top: 50%; transform: translateY(-50%);"> 
+
+                        <div class="content" style="padding-left: 100px;">
+                            <p class="name" data-bind="text: name"></p> 
+                            <p class="name" data-bind="text: price"></p> 
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="qty">
+                        <button data-bind="click: decrease">-</button>
+                        <span data-bind="text: count">0</span>
+                        <button data-bind="click: increase">+</button>
+                    </div>
+                </td>
+                <td data-bind="text: subtotal"></td>
             </tr>
         </tbody>
+
+        <tbelow>
+            <tr>
+                <td></td>
+                <!-- <td>Filled Lines Number:<span data-bind="text: total_product"></span></td> -->
+                <!-- <td>Total Qty: <span data-bind="text: $parent.total_qty"></span></td>
+                <td>Sub Total: <span data-bind="text: $parent.total_price"></span></td> -->
+            </tr>
+        </tbelow>
     </table>
 </div>
-<script>
-    require(['jquery', "jquery/ui" ], function($){
-        $(document).ready(function() {
-            console.log("hjh");
-        })
-    });
-</script>

@@ -19,9 +19,10 @@ define(['jquery',
         },
 
         search: ko.observable(),
-        // getProduct: function () {
-        //     console.log(this.search());
-        // },
+        // productChecked: ko.observable(),
+        resultSearch: ko.observableArray([]),
+        productList : ko.observableArray([]),
+        // count : ko.observable(1),
 
         getProduct: function () {
             var self = this;
@@ -32,15 +33,75 @@ define(['jquery',
                 JSON.stringify({'keyword': data}),
                 false
             ).done(function (response) {
-                    console.log(response);
+                    self.resultSearch(response);
+                    self.changeChecked = (item) => { 
+                        if(self.productChecked == true ) {
+                            // số lượng sản phẩm mặc định
+                            item.count = ko.observable(1);
+
+                            item.increase = () => {
+                                var currentValue = item.count();
+                                return item.count(currentValue + 1);
+                            }
+
+                            item.decrease = () => {
+                                var currentValue = item.count();
+        
+                                if (currentValue > 1) {
+                                    return item.count(currentValue - 1);
+                                }
+                            }
+
+                            item.subtotal = ko.computed(() => {
+                                return item.price * item.count();
+                            });
+                            
+                            self.productList.push(item);
+                        } else {
+                            console.log("sản phẩm chưa được chọn");
+                        }
+
+        
+                        // self.productList.forEach(element => {
+                        //     element.count = ko.observable(1);
+                        //     element.increase(self.count()) =  () => {
+                                
+                        //         var currentValue = self.count();
+                        //         return element.count(currentValue + 1);
+                        //     }
+                        // });
+
+                        // console.log(item);
+
+        
+
+
+                    };  
+
+                    // self.increase = () => {
+                    //     var currentValue = self.count();
+                    //     return self.count(currentValue + 1);
+                    // }
+
+
                 }
             ).fail(function (response) {
                 // code khi fail
             });
-        }
+        },
+        
+        getProductCheked : (item) => {
+            var getId = item.entity_id;
+
+        },
+
+        product : function() {
+            self.product_list = ko.observableArray([]);
+        }, 
 
     });
 
 }
+
 );
 
