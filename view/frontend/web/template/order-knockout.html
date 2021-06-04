@@ -13,8 +13,7 @@
                 <p class="product-sku" data-bind="text: sku"></p>
                 <p class="price" data-bind="text: price"></p>
             </div>
-
-            <input type="checkbox" data-bind="checked: $parent.productChecked, event:{change: $parent.changeChecked}" style="position: absolute; top: 25%; right: 0;" />
+            <input type="checkbox" data-bind="checked: $parent.productChecked, event:{change: $parent.changeChecked}" style="position: absolute; top: 25%; right: 0;" >
         </li>
     </ul>
 </div>
@@ -42,6 +41,8 @@
                         <div class="content" style="padding-left: 100px;">
                             <p class="name" data-bind="text: name"></p> 
                             <p class="name" data-bind="text: price"></p> 
+
+                            <button type="button" data-bind="click: removeItem" style="position: absolute; right: 10px; top: 50%;transform: translateY(-50%);">delete</button>
                         </div>
                     </div>
                 </td>
@@ -59,10 +60,14 @@
         <tbelow>
             <tr>
                 <td></td>
-                <!-- <td>Filled Lines Number:<span data-bind="text: total_product"></span></td> -->
-                <!-- <td>Total Qty: <span data-bind="text: $parent.total_qty"></span></td>
-                <td>Sub Total: <span data-bind="text: $parent.total_price"></span></td> -->
+                <td>Filled Lines Number:<span data-bind="text: total_product"></span></td>
+                <td>Total Qty: <span data-bind="text: total_qty"></span></td>
+                <td>Sub Total: <span data-bind="text: total_price"></span></td>
             </tr>
         </tbelow>
+
+        <tend>
+            <button type="submit" data-bind="click: addtocart, visible: productList().length > 0">Add to cart</button>
+        </tend>
     </table>
 </div>

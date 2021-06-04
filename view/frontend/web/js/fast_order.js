@@ -3,8 +3,9 @@ define(['jquery',
         'ko',
         'mage/url',
         'mage/storage',
+        'Magento_Customer/js/customer-data'
     ], 
-    function ($, Component, ko, urlBuilder, storage) {
+    function ($, Component, ko, urlBuilder, storage, customerData) {
     'use strict';
 
     return Component.extend({
@@ -19,11 +20,13 @@ define(['jquery',
         },
 
         search: ko.observable(),
-        // productChecked: ko.observable(),
         resultSearch: ko.observableArray([]),
         productList : ko.observableArray([]),
-        // count : ko.observable(1),
-
+        total_product: ko.observable(),
+        total_qty: ko.observable(),
+        total_price: ko.observable(),
+        // productListCheck: ko.observable(false),
+        aas : ko.observable(),
         getProduct: function () {
             var self = this;
             var serviceUrl = urlBuilder.build('order/index/search');
@@ -35,16 +38,19 @@ define(['jquery',
             ).done(function (response) {
                     self.resultSearch(response);
                     self.changeChecked = (item) => { 
-                        if(self.productChecked == true ) {
+                        
+                        item.productChecked = ko.observable();
+                        
+                        if(self.productChecked == true) {
                             // số lượng sản phẩm mặc định
                             item.count = ko.observable(1);
 
-                            item.increase = () => {
+                            item.increase = (item) => {
                                 var currentValue = item.count();
                                 return item.count(currentValue + 1);
                             }
 
-                            item.decrease = () => {
+                            item.decrease = (item) => {
                                 var currentValue = item.count();
         
                                 if (currentValue > 1) {
@@ -52,56 +58,109 @@ define(['jquery',
                                 }
                             }
 
+                            item.checkked2 = () => {
+                               return item.productChecked= ko.observable(false);
+                            }
+
                             item.subtotal = ko.computed(() => {
                                 return item.price * item.count();
                             });
-                            
+
+                            item.removeItem = (item) => {
+                                self.productList.remove(item);
+                                // item.productChecked(false);
+                                // self.productChecked === false;
+                                
+                                self.resultSearch().map((data) => {
+                                    if (item.entity_id == data.entity_id) {
+                                        data.checkked2();
+                                        console.log("đã xóa");
+                                    }
+                                    else {
+                                        data['productChecked'] = ko.observable(false);
+                                    }
+                                });
+
+                            }; 
+
+                            self.total_product_computed = ko.computed(() => {
+                                let lengths = self.productList().length;
+                                self.total_product(lengths);
+                            });
+
+                            self.total_qty_computed = ko.computed(() => {
+                                var total = 0;
+
+                                self.productList().map((product) => {
+                                    total = total + Number(product.count());
+                                });
+
+                                self.total_qty(total);
+                            });
+
+                            self.total_price_computed = ko.computed(() => {
+                                var total = 0;
+                                
+                                self.productList().map((product) => {
+                                    total = total + Number(product.subtotal());
+                                });
+
+                                self.total_price(total);
+                            });
+
                             self.productList.push(item);
                         } else {
-                            console.log("sản phẩm chưa được chọn");
+                            self.productList.remove(item);
+                            // console.log('sản phẩm đã tồn tại');
                         }
-
-        
-                        // self.productList.forEach(element => {
-                        //     element.count = ko.observable(1);
-                        //     element.increase(self.count()) =  () => {
-                                
-                        //         var currentValue = self.count();
-                        //         return element.count(currentValue + 1);
-                        //     }
-                        // });
-
-                        // console.log(item);
-
-        
-
-
                     };  
-
-                    // self.increase = () => {
-                    //     var currentValue = self.count();
-                    //     return self.count(currentValue + 1);
-                    // }
-
-
                 }
             ).fail(function (response) {
                 // code khi fail
+                // console.log("không nhận được data");
             });
         },
         
-        getProductCheked : (item) => {
-            var getId = item.entity_id;
+        addtocart : function () {
+            var self = this;
+            var serviceUrl = urlBuilder.build('order/index/addtocart');
+            var data = [];
 
+            ko.utils.arrayFilter(self.productList(), function (product) {
+                data.push({
+                    'product': product.entity_id,
+                    'qty' : product.count()
+                })
+
+            });
+            console.log(data);
+
+            var result = storage.post(
+                serviceUrl,
+                JSON.stringify(data),
+                false
+            ).done(
+                function (response, status) {
+                    if (status == 'success') {
+                        alert('add cart success');
+                        // location.reload();
+                        self.productList([]);
+                        self.resultSearch([]);
+                        self.search('');
+                        customerData.reload(['cart'], true);
+                    }
+                }
+            ).fail(function () {
+                alert('add cart fail');
+            });
         },
 
-        product : function() {
-            self.product_list = ko.observableArray([]);
-        }, 
+        getProductCheked : (item) => {
+            var getId = item.entity_id;
+        },
 
     });
 
 }
-
 );
 
