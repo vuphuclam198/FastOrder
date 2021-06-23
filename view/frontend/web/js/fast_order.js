@@ -36,12 +36,23 @@ define(['jquery',
                 JSON.stringify({'keyword': data}),
                 false
             ).done(function (response) {
+
+                   var checked = response.forEach(element => {
+                        element.productChecked = ko.observable();
+                    });
+
                     self.resultSearch(response);
+
                     self.changeChecked = (item) => { 
-                        
-                        item.productChecked = ko.observable();
-                        
-                        if(self.productChecked == true) {
+                        // item.productChecked = ko.observable();
+                        self.resultSearch().map((data) => {
+                            self.productList().map((data2) => {
+                                if (data.entity_id === data2.entity_id) {
+                                }
+                            });
+                        });
+
+                        if(item.productChecked(true)) {
                             // số lượng sản phẩm mặc định
                             item.count = ko.observable(1);
 
@@ -68,18 +79,8 @@ define(['jquery',
 
                             item.removeItem = (item) => {
                                 self.productList.remove(item);
-                                // item.productChecked(false);
+                                item.productChecked(false);
                                 // self.productChecked === false;
-                                
-                                self.resultSearch().map((data) => {
-                                    if (item.entity_id == data.entity_id) {
-                                        data.checkked2();
-                                        console.log("đã xóa");
-                                    }
-                                    else {
-                                        data['productChecked'] = ko.observable(false);
-                                    }
-                                });
 
                             }; 
 
@@ -118,9 +119,18 @@ define(['jquery',
             ).fail(function (response) {
                 // code khi fail
                 // console.log("không nhận được data");
+                // self.resultSearch().map((data) => {
+                //     if (item.entity_id == data.entity_id) {
+                //         item.productChecked(false);
+                //         console.log("đã xóa");
+                //     }
+                //     else {
+                //         data['productChecked'] = ko.observable(false);
+                //     }
+                // });
             });
         },
-        
+
         addtocart : function () {
             var self = this;
             var serviceUrl = urlBuilder.build('order/index/addtocart');

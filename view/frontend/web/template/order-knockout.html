@@ -13,7 +13,7 @@
                 <p class="product-sku" data-bind="text: sku"></p>
                 <p class="price" data-bind="text: price"></p>
             </div>
-            <input type="checkbox" data-bind="checked: $parent.productChecked, event:{change: $parent.changeChecked}" style="position: absolute; top: 25%; right: 0;" >
+            <input type="checkbox" data-bind="checked: productChecked, event:{change: $parent.changeChecked}" style="position: absolute; top: 25%; right: 0;" >
         </li>
     </ul>
 </div>
@@ -23,7 +23,7 @@
         <thead class="thead_data">
             <tr>
                 <th>SKU</th>
-                <th>PRODUCT</th>
+                <th>PRODUCT</th>    
                 <th>QTY</th>
                 <th>SUBTOTAL</th>
             </tr>
