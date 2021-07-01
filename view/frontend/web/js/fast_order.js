@@ -42,20 +42,20 @@ define(['jquery',
                     });
 
                     self.resultSearch(response);
-
+                    let exit;
+                    self.resultSearch().map((data) => {
+                        self.productList().map((data2) => {
+                            if (data.entity_id == data2.entity_id) {
+                                console.log("san pham ddax ton tai");
+                                data.productChecked(true);
+                            } 
+                        });
+                    });
                     self.changeChecked = (item) => { 
                         // item.productChecked = ko.observable();
-                        let exit;
-                        self.resultSearch().map((data) => {
-                            self.productList().map((data2) => {
-                                if (data.entity_id == data2.entity_id) {
-                                    console.log("san pham ddax ton tai");
-                                    exit = true;
-                                }
-                            });
-                        });
-
-                        if(item.exit == false && item.productChecked(true)) {
+                        item.exit = false;
+                        console.log(item.exit);
+                        if(item.exit == false && item.productChecked() == true) {
                             // số lượng sản phẩm mặc định
                             item.count = ko.observable(1);
 
@@ -83,7 +83,6 @@ define(['jquery',
                             item.removeItem = (item) => {
                                 self.productList.remove(item);
                                 item.productChecked(false);
-                                // self.productChecked === false;
 
                             }; 
 
@@ -119,6 +118,9 @@ define(['jquery',
                             item.exit = false;
                             // console.log('sản phẩm đã tồn tại');
                         }
+
+                        console.log(item.productChecked());
+                        console.log(item.exit);
                     };  
                 }
             ).fail(function (response) {
